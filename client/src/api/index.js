@@ -1,7 +1,7 @@
-import { API_BASE } from '../constants';
+import CONSTANTS from '../constants';
 
 export const registerUser = (data) => {
-    return fetch(`${API_BASE}/user/registration`, {
+    return fetch(`${CONSTANTS.API_BASE}/user/registration`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
