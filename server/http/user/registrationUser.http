@@ -1,4 +1,4 @@
-POST http://localhost:5000/api/user/registration HTTP/1.1
+POST http://localhost:5000/api/user/sign-up HTTP/1.1
 Content-Type: application/json
 
 {
@@ -6,5 +6,5 @@ Content-Type: application/json
     "lastName": "Doe",
     "birthday": "1985-01-01",
     "email": "k.doe@mail.com",
-    "passwordHash": "ydshdchs737gfj"
+    "password": "ydshdchs737gfj"
 }
