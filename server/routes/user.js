@@ -5,6 +5,6 @@ const { hashPass } = require('../middlewares/hashPassword');
 const userRouter = Router();
 
 userRouter.post('/sign-up', hashPass, UserController.registrationUser);
-userRouter.post('/sign-in', hashPass, UserController.loginUser);
+userRouter.post('/sign-in', UserController.loginUser);
 
 module.exports = userRouter;
