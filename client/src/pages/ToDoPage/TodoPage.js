@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ToDoList from '../../components/ToDoList';
-import { getTasks } from '../../api/taskApi';
+import { addNewTask, getTasks } from '../../api/taskApi';
 import { useNavigate } from 'react-router-dom';
+import AddTaskForm from '../../components/AddTaskForm';
+
 
 const TodoPage = (props) => {
     const [todos, setTodos] = useState([]);
@@ -20,9 +22,21 @@ const TodoPage = (props) => {
         })
     }, []);
 
+    const getAddedTask = (data) => {
+        addNewTask({
+            authorId: props.user._id,
+            ...data
+        }).then(({data}) => {
+            setTodos([...todos, data]);
+        })
+    }
+    
+
     return (
         <div>
-            <h1>ToDoList</h1>
+            <AddTaskForm sendData={getAddedTask} />
+            <h1>ToDo List</h1>
+            {/* добавить форму для добавления новой задачи */}
             <ToDoList todos={todos} />
         </div>
     );
