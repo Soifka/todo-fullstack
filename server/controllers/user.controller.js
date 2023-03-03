@@ -1,5 +1,6 @@
 const { User } = require('../models/index');
 const bcrypt = require('bcrypt');
+const NotFoundError = require('../errors/NotFound');
 
 module.exports.registrationUser = async(req, res, next) => {
     try {
@@ -20,14 +21,12 @@ module.exports.loginUser = async(req, res, next) => {
         });
         if(foundUser) {
             const result = await bcrypt.compare(body.password, foundUser.passwordHash);
-            // check compare result!!!
-            console.log(result)
-
-            if(result) {
-                return res.status(200).send({data: foundUser});
-            } else {
-                return res.status(400).send({error: 'Wrong password or email'})
-            }
+            if(!result) {
+                throw new NotFoundError('Wrong password');
+            } 
+            return res.status(200).send({data: foundUser});
+        } else {
+            throw new NotFoundError('Wrong email');
         }
     } catch (error) {
         next(error);

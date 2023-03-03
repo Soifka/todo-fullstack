@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { BrowserRouter, Routes, Route, redirect } from 'react-router-dom';
 import Home from './pages/Home/Home';
-import TodoPage from './pages/TodoPage';
+import TodoPage from './pages/ToDoPage/TodoPage';
 import './App.css';
 
 

@@ -1,0 +1,10 @@
+POST http://localhost:5000/api/tasks HTTP/1.1
+Content-Type: application/json
+
+{
+    "authorId": "6400d86d799e9ccc19f5a148",
+    "body": "Another task",
+    "createdAt": "2023-03-03",
+    "deadline": "2023-03-10",
+    "status": "done"
+}

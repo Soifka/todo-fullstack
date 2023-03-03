@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../../api/index';
+//import { registerUser } from '../../api/userApi';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
 import styles from './Home.module.css';
