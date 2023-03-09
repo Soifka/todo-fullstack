@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ToDoList from '../../components/ToDoList';
 import { addNewTask, getTasks } from '../../api/taskApi';
-import { useNavigate } from 'react-router-dom';
 import AddTaskForm from '../../components/AddTaskForm';
 
 
 const TodoPage = (props) => {
     const [todos, setTodos] = useState([]);
-    const navigate = useNavigate();
-
+    
     useEffect(() => {
-        if(!props.user) {
-            return navigate('/');
-        }
-        getTasks(props.user._id)
+        getTasks()
         .then(result => {
             setTodos(result.data);
         })
@@ -23,10 +18,8 @@ const TodoPage = (props) => {
     }, []);
 
     const getAddedTask = (data) => {
-        addNewTask({
-            authorId: props.user._id,
-            ...data
-        }).then(({data}) => {
+        addNewTask(data)
+        .then(({data}) => {
             setTodos([...todos, data]);
         })
     }
