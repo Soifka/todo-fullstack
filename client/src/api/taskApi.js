@@ -1,4 +1,5 @@
 import CONSTANTS from '../constants';
+import history from '../BrowserHistory';
 
 export const getTasks = async() => {
     const token = localStorage.getItem('token');
@@ -10,6 +11,11 @@ export const getTasks = async() => {
     });
     if(responce.status === 400) {
         const error = await responce.json();
+        return Promise.reject(error);
+    }
+    if(responce.status === 403) {
+        const error = await responce.json();
+        history.push('/');
         return Promise.reject(error);
     }
 
@@ -28,6 +34,11 @@ export const addNewTask = async(data) => {
     });
     if(responce.status === 400) {
         const error = await responce.json();
+        return Promise.reject(error);
+    };
+    if(responce.status === 403) {
+        const error = await responce.json();
+        history.push('/');
         return Promise.reject(error);
     };
 
