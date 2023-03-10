@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ToDoList from '../../components/ToDoList';
-import { addNewTask, getTasks } from '../../api/taskApi';
+import { addNewTask, getTasks, deleteTask } from '../../api/taskApi';
 import AddTaskForm from '../../components/AddTaskForm';
 
 
@@ -23,14 +23,25 @@ const TodoPage = (props) => {
             setTodos([...todos, data]);
         })
     }
+
+    const delTask = (id) => {
+        deleteTask(id)
+        .then(({data: deletedTask}) => {
+            const updatedTasks = todos.filter(todo => todo._id !== deletedTask._id);
+            setTodos(updatedTasks);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
     
 
     return (
         <div>
+            {/* форма для добавления новой задачи */}
             <AddTaskForm sendData={getAddedTask} />
             <h1>ToDo List</h1>
-            {/* добавить форму для добавления новой задачи */}
-            <ToDoList todos={todos} />
+            <ToDoList todos={todos} delCallback={delTask} />
         </div>
     );
 }

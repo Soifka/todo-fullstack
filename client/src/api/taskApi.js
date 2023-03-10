@@ -1,46 +1,66 @@
 import CONSTANTS from '../constants';
 import history from '../BrowserHistory';
+import { refreshSession } from './userApi';
 
 export const getTasks = async() => {
-    const token = localStorage.getItem('token');
-    const responce = await fetch(`${CONSTANTS.API_BASE}/tasks/`, {
+    const accessToken = localStorage.getItem('accessToken');
+    const res = await fetch(`${CONSTANTS.API_BASE}/tasks/`, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${accessToken}`
         }
     });
-    if(responce.status === 400) {
-        const error = await responce.json();
+    if(res.status === 400) {
+        const error = await res.json();
         return Promise.reject(error);
     }
-    if(responce.status === 403) {
-        const error = await responce.json();
-        history.push('/');
-        return Promise.reject(error);
+    if(res.status === 403) {
+        await refreshSession();
+        return await getTasks();
     }
 
-    return responce.json();
+    return res.json();
 }
 
 export const addNewTask = async(data) => {
-    const token = localStorage.getItem('token');
-    const responce = await fetch(`${CONSTANTS.API_BASE}/tasks/`, {
+    const accessToken = localStorage.getItem('accessToken');
+    const res = await fetch(`${CONSTANTS.API_BASE}/tasks/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify(data)
     });
-    if(responce.status === 400) {
-        const error = await responce.json();
+    if(res.status === 400) {
+        const error = await res.json();
         return Promise.reject(error);
     };
-    if(responce.status === 403) {
-        const error = await responce.json();
-        history.push('/');
-        return Promise.reject(error);
+    if(res.status === 403) {
+        await refreshSession();
+        return await addNewTask(data);
     };
 
-    return responce.json();
+    return res.json();
+}
+
+export const deleteTask = async(taskId) => {
+    const accessToken = localStorage.getItem('accessToken');
+    const res = await fetch(`${CONSTANTS.API_BASE}/tasks/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+
+    if(res.status === 400) {
+        const error = await res.json();
+        return Promise.reject(error);
+    }
+    if(res.status === 403) {
+        await refreshSession();
+        return await deleteTask(taskId);
+    }
+
+    return res.json();
 }

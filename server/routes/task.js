@@ -6,6 +6,7 @@ const taskRouter = Router();
 
 taskRouter.post('/', checkToken, TaskController.createTask);
 taskRouter.get('/', checkToken, TaskController.getAllUserTasks);
+taskRouter.delete('/:taskId', checkToken, TaskController.deleteTask);
 
 
 module.exports = taskRouter;

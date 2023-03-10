@@ -13,19 +13,14 @@ function App() {
 
   useEffect(() => {
     if(!user) {
-        const token = localStorage.getItem('token');
-        if(token) {
-            authUser(token)
+            authUser()
             .then(userData => {
                 setUser(userData.data);
             }).catch(error => {
                 history.push('/');
             })
-        } else {
-          history.push('/');
-        }
-    }
-}, [user])
+        } 
+    }, [])
 
   return (
     <HistoryRouter history={history}>

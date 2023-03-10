@@ -1,53 +1,85 @@
 import CONSTANTS from '../constants';
 import history from '../BrowserHistory';
 
-export const registerUser = async (data) => {
-    const responce = await fetch(`${CONSTANTS.API_BASE}/users/sign-up`, {
+export const registerUser = async(userInput) => {
+    const res = await fetch(`${CONSTANTS.API_BASE}/users/sign-up`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(userInput)
     });
 
-    if(responce.status === 400) {
-        const error = await responce.json();
+    if(res.status === 400) {
+        const error = await res.json();
         return Promise.reject(error); ////!!!!!!!!! error?
     };
 
-    return responce.json();
+    const {data, tokens} = await res.json();
+    localStorage.setItem('accessToken', tokens.accessToken);
+    localStorage.setItem('refreshToken', tokens.refreshToken);
+
+    return data;
 }
 
-export const loginUser = async(data) => {
-    const responce = await fetch(`${CONSTANTS.API_BASE}/users/sign-in`, {
+export const loginUser = async(userInput) => {
+    const res = await fetch(`${CONSTANTS.API_BASE}/users/sign-in`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(userInput)
     });
 
-    if(responce.status === 400) {
-        const error = await responce.json();
+    if(res.status === 400) {
+        const error = await res.json();
         return Promise.reject(error);
     };
 
-    return responce.json();
+    const {data, tokens} = await res.json();
+    localStorage.setItem('accessToken', tokens.accessToken);
+    localStorage.setItem('refreshToken', tokens.refreshToken);
+
+    return data;
 }
 
-export const authUser = async (token) => {
-    const res = await fetch(`${CONSTANTS.API_BASE}/users/`, {
-        method: 'GET',
+export const refreshSession = async() => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    const res = await fetch(`${CONSTANTS.API_BASE}/users/refresh`, {
+        method: 'POST',
         headers: {
-            'Authorization': `Bearer ${token}`
-        }
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({refreshToken})
     });
+    if(res.status === 401) {
+        return history.replace('/');
+    } 
 
-    if(res.status === 403) {
-        const error = await res.json();
-        history.push('/');
-        return Promise.reject(error);
+    const tokens = await res.json();
+    console.log(tokens);
+    localStorage.setItem('accessToken', tokens.accessToken);
+    localStorage.setItem('refreshToken', tokens.refreshToken);
+
+    return;
+}
+
+export const authUser = async() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if(accessToken) {
+        const res = await fetch(`${CONSTANTS.API_BASE}/users/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        if(res.status === 403) {
+            await refreshSession();
+        } else {
+            return res.json();
+        }
+    } else {
+        return history.replace('/');
     }
-
-    return res.json();
 }

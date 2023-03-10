@@ -11,11 +11,11 @@ module.exports.createAccessToken = async({userId, email}) =>
         expiresIn: ACCESS_EXPIRES_TIME
 });
  
-module.exports.verifyAccessToken = async(token) => await promisifyJWTVerify(token, ACCESS_SECRET);
+module.exports.verifyAccessToken = async(accessToken) => await promisifyJWTVerify(accessToken, ACCESS_SECRET);
 
 module.exports.createRefreshToken = async({userId, email}) => 
     await promisifyJWTSign({userId, email}, REFRESH_SECRET, {
         expiresIn: REFRESH_EXPIRES_TIME
 });
 
-module.exports.verifyRefreshToken = async(token) => await promisifyJWTVerify(token, REFRESH_SECRET);
+module.exports.verifyRefreshToken = async(refreshToken) => await promisifyJWTVerify(refreshToken, REFRESH_SECRET);
