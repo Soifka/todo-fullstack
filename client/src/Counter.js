@@ -1,30 +1,24 @@
-import React, { useReducer, useState } from 'react';
 import { connect } from 'react-redux';
+import { incrementAction, decrementAction } from './actions/actionCreator';
 
 
 const Counter = (props) => {
 
-    const increment = () => {
-        const action = {
-            type: 'COUNTER_PLUS'
-        }
-        props.dispatch(action);
-    };
+    // const increment = () => {
+    //     props.dispatch(createActionIncrement());
+    // };
 
-    const decrement = () => {
-        const action = {
-            type: 'COUNTER_MINUS'
-        }
-        props.dispatch(action);
-    };
+    // const decrement = () => {
+    //     props.dispatch(createActionDecrement());
+    // };
 
     console.log(props)
 
     return (
         <>
             <h1>{props.counter}</h1>
-            <button onClick={decrement}>Decrem</button>
-            <button onClick={increment}>Increm</button>
+            <button onClick={props.decrement}>Decrem</button>
+            <button onClick={props.increment}>Increm</button>
         </>
     );
 };
@@ -36,15 +30,32 @@ connect - это функция, которая принимает 2 аргум�
 1) mapStateToProps - функция, которая принимает ВЕСЬ стейт, а возвращает только ту часть стейта, 
 которая нужна этому конкретному компоненту;
 
-2) mapDispatchToProps
+2) mapDispatchToProps - функция, которая принимает dispatch и возвращает объект, 
+в котором все action creators обернуты в dispatch
 */
 
 const mapStateToProps = (state) => {
     return state;
 };
 
-const WrappedCounter = connect(mapStateToProps)(Counter); 
+/* 
+mapDispatchToProps в виде функции -->
+const mapDispatchToProps = (dispatch) => {
+    return {
+        increment: () => dispatch(createActionIncrement()),
+        decrement: () => dispatch(createActionDecrement())
+    }
+}
+*/
+
+// mapDispatchToProps в виде объекта (это более кратко) -->
+const mapDispatchToProps = {
+    increment: incrementAction,
+    decrement: decrementAction
+}
+
+const WrappedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter); 
 /* каррирование функции --> 
-трансформация функции func(a, b, c) --> func(a)(b)(c) */
+трансформация функции следующим образом: func(a, b, c) --> func(a)(b)(c) */
 
 export default WrappedCounter;
