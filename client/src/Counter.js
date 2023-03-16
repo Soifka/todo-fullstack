@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { incrementAction, decrementAction, setStepAction } from './actions/actionCreator';
+import { incrementAction, decrementAction, setStepAction, toggleThemeAction } from './actions/actionCreator';
 
 
 const Counter = (props) => {
@@ -8,22 +8,21 @@ const Counter = (props) => {
         props.setStep(Number(value));
     }
 
-    // const increment = () => {
-    //     props.dispatch(createActionIncrement());
-    // };
-
-    // const decrement = () => {
-    //     props.dispatch(createActionDecrement());
-    // };
+    const toggleTheme = () => {
+        props.toggleTheme();
+    }
 
     console.log(props)
 
     return (
         <>
-            <h1>{props.counter}</h1>
-            <input type="number" name="step" onChange={onSetStep} value={props.step} />
-            <button onClick={props.decrement}>Decrem</button>
-            <button onClick={props.increment}>Increm</button>
+            <div style={{backgroundColor: props.themes.isDarkMode ? 'grey' : 'white'}}>
+                <h1>{props.counter.counter}</h1>
+                <input type="number" name="step" onChange={onSetStep} value={props.counter.step} />
+                <button onClick={props.decrement}>Decrem</button>
+                <button onClick={props.increment}>Increm</button>
+                <button onClick={toggleTheme}>{props.themes.isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}</button>
+            </div>
         </>
     );
 };
@@ -49,7 +48,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         increment: () => dispatch(createActionIncrement()),
         decrement: () => dispatch(createActionDecrement()),
-        setStep: (value) => dispatch(setStepAction(value))
+        setStep: (value) => dispatch(setStepAction(value)),
+        toggleTheme: () => dispatch(toggleThemeAction())
     }
 }
 */
@@ -58,7 +58,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapDispatchToProps = {
     increment: incrementAction,
     decrement: decrementAction,
-    setStep: setStepAction
+    setStep: setStepAction,
+    toggleTheme: toggleThemeAction
 }
 
 const WrappedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter); 
