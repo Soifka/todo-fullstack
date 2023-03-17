@@ -24,6 +24,8 @@ const Counter = (props) => {
             <input type="number" name="step" onChange={onSetStep} value={props.step} />
             <button onClick={props.decrement}>Decrem</button>
             <button onClick={props.increment}>Increm</button>
+
+            <button>Send counter to backend</button>
         </>
     );
 };
