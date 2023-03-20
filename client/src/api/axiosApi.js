@@ -42,13 +42,15 @@ instance.interceptors.response.use((responce) => {
     return responce;
 }, (err) => {
     if(err.responce.status === 403 && localStorage.getItem('refreshToken')) {
-        refreshUser();
-    }
-    if(err.responce.status === 401) {
+        return refreshUser().then(() => {
+            return instance(err.config);
+        });
+    } else if(err.responce.status === 401) {
+        logoutUser()
         history.replace('/');
+    } else {
+        return Promise.reject(err);
     }
-
-    return Promise.reject(err);
 });
 
 export const refreshUser = async() => {

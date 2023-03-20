@@ -25,7 +25,7 @@ module.exports.getAllUserTasks = async(req, res, next) => {
 
 module.exports.deleteTask = async(req, res, next) => {
     try {
-        const { params: {taskId}, tokenPayload: { userId } } = req;
+        const { params: { taskId }, tokenPayload: { userId } } = req;
         const deletedTask = await Task.findOneAndRemove({authorId: userId, _id: taskId});
         
         if(deletedTask) {
