@@ -6,13 +6,20 @@ const instance = axios.create({
     baseURL: CONSTANTS.API_BASE
 });
 
+// User Api
+
 export const registerUser = async(userInput) => await instance.post('/users/sign-up', userInput);
 export const loginUser = async(userInput) => await instance.post('/users/sign-in', userInput);
+export const authUser = async() => await instance.get('/users');
+export const logoutUser = async() => {
+    localStorage.clear();
+}
 
+// Task Api
 
 export const getTasks = async() => await instance.get('/tasks/');
 export const addNewTask = async(taskData) => await instance.post('/tasks/', taskData);
-export const deleteTask = async(taskId) => await instance.delete('/tasks/taskId');
+export const deleteTask = async(taskId) => await instance.delete(`/tasks/${taskId}`);
 
 
 instance.interceptors.request.use((config) => {

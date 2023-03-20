@@ -1,35 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { unstable_HistoryRouter as HistoryRouter, Routes, Route, redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { unstable_HistoryRouter as HistoryRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import TodoPage from './pages/ToDoPage/TodoPage';
 import history from './BrowserHistory';
-import { authUser } from './api/userApi';
+import { connect } from 'react-redux';
+import { authUserRequest } from './actions/actionCreator';
 import './App.css';
 
 
-function App() {
-
-  const [user, setUser] = useState(null);
+function App(props) {
 
   useEffect(() => {
-    if(!user) {
-            authUser()
-            .then(userData => {
-                setUser(userData.data);
-            }).catch(error => {
-                history.push('/');
-            })
-        } 
-    }, [])
+    if(!props.user) {
+      props.authUserRequest();
+    }
+  }, [])
 
   return (
     <HistoryRouter history={history}>
       <Routes>
-        <Route path="/" element={<Home sendUser={setUser} />} />
-        <Route path="/tasks/" element={<TodoPage user={user} />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/tasks/" element={<TodoPage />} />
       </Routes>
     </HistoryRouter>
   );
-};
+}
 
-export default App;
+const mapStateToProps = ({ user }) => ({ user });
+
+const mapDispatchToProps = {
+  authUserRequest
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

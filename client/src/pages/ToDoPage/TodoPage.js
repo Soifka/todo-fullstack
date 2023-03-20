@@ -1,49 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ToDoList from '../../components/ToDoList';
-import { addNewTask, getTasks, deleteTask } from '../../api/axiosApi';
 import AddTaskForm from '../../components/AddTaskForm';
+import { getTasksRequest, createTaskRequest, deleteTaskRequest, logoutRequest } from '../../actions/actionCreator';
+import { connect } from 'react-redux';
 
 
 const TodoPage = (props) => {
-    const [todos, setTodos] = useState([]);
     
     useEffect(() => {
-        getTasks()
-        .then(({data: {data}}) => {
-            setTodos(data);
-        })
-        .catch(error => {
-            console.error(error);
-        })
+        props.getTasksRequest();
     }, []);
 
     const getAddedTask = (data) => {
-        addNewTask(data)
-        .then(({data: {data: createdTask}}) => {
-            setTodos([...todos, createdTask]);
+        props.createTaskRequest({
+            //status: 'new',
+            ...data
         })
     }
 
     const delTask = (id) => {
-        deleteTask(id)
-        .then(({data: {data: deletedTask}}) => {
-            const updatedTasks = todos.filter(todo => todo._id !== deletedTask._id);
-            setTodos(updatedTasks);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        props.deleteTaskRequest(id);
     }
-    
+
+    const logoutHandler = () => {
+        props.logoutRequest();
+    }
 
     return (
         <div>
+            <button onClick={logoutHandler}>Logout</button>
             {/* форма для добавления новой задачи */}
             <AddTaskForm sendData={getAddedTask} />
             <h1>ToDo List</h1>
-            <ToDoList todos={todos} delCallback={delTask} />
+            <ToDoList todos={props.tasks} delCallback={delTask} />
         </div>
     );
 }
 
-export default TodoPage;
+const mapStateToProps = ({tasks}) => ({tasks});
+
+const mapDispatchToProps = {
+    getTasksRequest,
+    createTaskRequest,
+    deleteTaskRequest,
+    logoutRequest
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoPage);
