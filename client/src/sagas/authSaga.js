@@ -18,7 +18,7 @@ export function* registerSaga(action) {
     try {
         const { data: { data } } = yield registerUser(action.payload);
         yield put(registerUserSuccess(data));
-        // history.push('/tasks');
+        history.push('/tasks');
     } catch (error) {
         yield put(registerUserError(error.response.data.error));
     }
@@ -29,7 +29,7 @@ export function* authSaga(action) {
         const { data: { data } } = yield authUser();
         yield put(authUserSuccess(data));
     } catch (error) {
-        yield put(authUserError(error.response.data.error));
+        yield put(authUserError(error));
     }
 }
 
